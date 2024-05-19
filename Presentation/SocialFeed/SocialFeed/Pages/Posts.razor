@@ -1,0 +1,116 @@
+﻿@page "/post"
+
+@using System.Text.Json
+@using Bislerium.Models
+@using System.Net.Http.Headers
+@using Bislerium.Models.Request
+@using Bislerium.Services
+
+@inject HttpClient HttpClient
+@inject APIService ApiService
+
+<PageTitle>Post Details</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Create Your Blog Post</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="projectname" class="form-label">Title</label>
+                                <input type="text" id="projectname" class="form-control" @bind="_blogRequestDto.Title" placeholder="Enter post title">
+                            </div>
+                            <div class="mb-3">
+                                <label for="project-overview" class="form-label">Overview</label>
+                                <textarea class="form-control" id="project-overview" rows="5" @bind="_blogRequestDto.Body" placeholder="Enter some brief about post.."></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" id="location" class="form-control" @bind="_blogRequestDto.Location" placeholder="Enter location">
+                            </div>
+                        </div> 
+                    </div> 
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="projectname" class="form-label">Avatar</label>
+                                <p class="text-muted font-14">Recommended thumbnail size 800x400 (px).</p>
+                                <form action="/" method="post" class="dropzone" id="myAwesomeDropzone" data-plugin="dropzone" data-previews-container="#file-previews"
+                                      data-upload-preview-template="#uploadPreviewTemplate">
+                                    <div class="fallback">
+                                        <InputFile @key=@(InputFileId) class="form-control" placeholder="Upload Blog Images" multiple="true" OnChange="@OnInputFileChanged" />
+                                    </div>
+                                    <div class="dz-message needsclick">
+                                        <i class="h3 text-muted ri-upload-cloud-2-line"></i>
+                                        <h4>Drop files here or click to upload.</h4>
+                                    </div>
+                                </form>
+                                <div class="dropzone-previews mt-3" id="file-previews"></div>
+                                <div class="d-none" id="uploadPreviewTemplate">
+                                    <div class="card mt-1 mb-0 shadow-none border">
+                                        <div class="p-2">
+                                            <div class="row align-items-center">
+                                                <div class="col-auto">
+                                                    <img data-dz-thumbnail src="#" class="avatar-sm rounded bg-light" alt="">
+                                                </div>
+                                                <div class="col ps-0">
+                                                    <a href="javascript:void(0);" class="text-muted fw-bold" data-dz-name></a>
+                                                    <p class="mb-0" data-dz-size></p>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <a href="" class="btn btn-link btn-lg text-muted" data-dz-remove>
+                                                        <i class="ri-close-line"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reaction" class="form-label">Reaction</label>
+                                <div class="">
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" id="customRadio3" name="customRadio1" value="Happy" class="form-check-input" @onchange="HandleReactionType">
+                                        <label class="form-check-label" for="customRadio3">Happy</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" id="customRadio4" name="customRadio1" value="Sad" class="form-check-input" @onchange="HandleReactionType">
+                                        <label class="form-check-label" for="customRadio4">Sad</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" id="customRadio4" name="customRadio1" value="Excited" class="form-check-input" @onchange="HandleReactionType">
+                                        <label class="form-check-label" for="customRadio4">Excited</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" id="customRadio4" name="customRadio1" value="Loved" class="form-check-input" @onchange="HandleReactionType">
+                                        <label class="form-check-label" for="customRadio4">Loved</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="btn-wrapper text-start">
+                                <button class="btn btn-success" type="submit" @onclick="HandleValidSubmit">Upload Post</button>
+                            </div>
+                        </div> 
+                    </div> 
+                </div> 
+            </div> 
+            @if (!string.IsNullOrEmpty(Message))
+            {
+                <MessageLayout Type="@Type" Message="@Message" />
+            }
+        </div> 
+    </div>
+</div>

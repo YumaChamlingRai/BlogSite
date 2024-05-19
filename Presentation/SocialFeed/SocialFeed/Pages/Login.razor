@@ -1,0 +1,75 @@
+﻿@layout EmptyLayout
+
+@page "/login"
+
+@using System.Text.Json
+@using Bislerium.Models
+@using Bislerium.Services
+@using Blazored.LocalStorage
+@using Bislerium.Models.Request
+@using Bislerium.Models.Response
+
+@inject APIService ApiService
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<PageTitle>Login</PageTitle>
+
+<section class="">
+    <div class="px-4 py-5 px-md-5 text-center text-lg-start" style="background-color: hsl(0, 0%, 96%)">
+        <div class="container">
+            <div class="row gx-lg-5 align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h1 class="my-5 display-3 fw-bold ls-tight">
+                        WE ARE HERE FOR BLOG LOVERS <br />
+                        <span class="text-warning">Its Blog Time</span>
+                    </h1>
+                    <p style="color: hsl(43, 95%, 0%)">
+                        Did you kow reading Blog enhance knowledge making you best fromt he rest.a
+                        Join our community of Blogger Today !!!
+                    </p>
+                </div>
+
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div class="card">
+                        <div class="card-body py-5 px-md-5">
+                            <form @onsubmit="@HandleValidSubmit">
+                                <div class="text-center w-75 m-auto">
+                                    <h4 class="text-dark-50 text-center pb-0 fw-bold">Sign In</h4>
+                                    <p class="text-muted mb-4">Enter your credentials to access to your account.</p>
+                                </div>
+
+                                <div data-mdb-input-init class="form-outline mb-4 text-center">
+                                    <input type="email" @bind="_loginRequestDto.EmailAddress" id="emailaddress" class="form-control" />
+                                    <label class="form-label" for="emailaddress">Email Address</label>
+                                </div>
+
+                                <div data-mdb-input-init class="form-outline mb-4 text-center">
+                                    <input type="password" @bind="_loginRequestDto.Password" id="password" class="form-control" />
+                                    <label class="form-label" for="password">Password</label>
+                                </div>
+
+                                <div class="mb-3 mb-0 text-center">
+                                    <button class="btn btn-warning" type="submit"> Log In </button>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-12 text-center">
+                                        <p class="text-muted">Don't have an account? <a href="/register" class="text-muted ms-1"><b>Sign Up</b></a></p>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <p class="text-muted">Forgot your password? <a href="/reset-password" class="text-muted ms-1"><b>Reset Password</b></a></p>
+                                    </div>
+                                </div>
+                            </form>
+                            @if (!string.IsNullOrEmpty(Message))
+                            {
+                                <MessageLayout Type="@Type" Message="@Message" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

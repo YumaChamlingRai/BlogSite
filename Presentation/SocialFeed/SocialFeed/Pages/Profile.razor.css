@@ -1,0 +1,40 @@
+.userProfile-grid .user-image {
+  position: relative;
+}
+.userProfile-grid img {
+  border: 2px solid rgb(238, 238, 238);
+  padding: 4px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+.userProfile-grid .user-image #camera {
+  position: absolute;
+  right: 0;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 50%;
+  height: 24px;
+  width: 26px;
+}
+#camera i {
+  font-size: 22px;
+  color: #a1a9b1;
+}
+.inner-padding {
+  padding: 20px 24px;
+  border-radius: 14px;
+  background-color: #fff;
+}
+.form-content h5 {
+  color: #ced4da;
+}
+.form-content .user-image {
+  width: max-content;
+  margin: 0 auto;
+}
+p.note {
+  color: #35b8e0;
+}

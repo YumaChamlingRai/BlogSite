@@ -1,0 +1,157 @@
+﻿@inherits LayoutComponentBase
+
+@using Bislerium.DTOs
+@using Bislerium.Models
+@using Bislerium.Models.Request
+@using Bislerium.Services
+
+@inject APIService Service
+@inject NavigationManager NavManager
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="" style="font-size: 21px;font-weight: bold;"> 
+            <span style="font-size: 30px;">B</span>ISLERIUM 
+            <span style="font-size: 30px;">B</span>LOG
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="mx-2"></div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="mx-3"></div>
+            @if(_globalState.UserId != 0)
+            {
+                <div class="account-wrapper btn-group">
+                    <a class="p-0 d-flex align-items-center text-start custom-button" href="profile">
+                        <span class="user-image">
+                            <img src="https://localhost:44340/@_globalState.ImageUrl" alt="User Photo" width="45" height="35" class="mx-2 rounded-circle"/>
+                        </span>
+                        <span class="user-info">
+                            <p class="text-black my-0">@_globalState.Name</p>
+                        </span>
+                    </a>
+                </div>
+            }
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                @if (_globalState.RoleName == "Admin")
+                {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="dashboard" Match="NavLinkMatch.All">
+                            <span class="bi bi-house-door-fill" aria-hidden="true"></span> Dashboard
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="admin">
+                            <span aria-hidden="true"></span> Admin Registration
+                        </NavLink>
+                    </li>
+                }
+                @if (_globalState.RoleName != "Admin")
+                {
+                    <li class="nav-item">
+                        <a href="notifications" style="cursor: pointer; text-decoration: none;">
+                            <i class="ri-notification-3-line font-22"></i>
+                            <span class="noti-icon-badge text-danger">@notificationCount</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="feeds">
+                            <span aria-hidden="true"></span> Feeds
+                        </NavLink>
+                    </li>
+                }
+                @if(_globalState.RoleName == "Blogger")
+                {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="post">
+                            <span aria-hidden="true"></span> Post
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="user-blog">
+                            <span aria-hidden="true"></span> User's Blogs
+                        </NavLink>
+                    </li>
+                }
+                @if(_globalState.UserId == 0)
+                {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="register">
+                            <span aria-hidden="true"></span> Register
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="login">
+                            <span aria-hidden="true"></span> Login
+                        </NavLink>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="change-password">
+                            <span  aria-hidden="true"></span> Change Password
+                        </NavLink>
+                    </li>
+                    <li class="nav-item">
+                        <span @onclick="LogoutHandler" class="d-flex ms-3">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span>Logout</span>
+                        </span>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <article class="content px-4">
+        @Body
+    </article>
+</main>
+                
+@code{
+    private int notificationCount = 0;
+
+    private GlobalState _globalState = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var isAccessTokenValid = await Service.IsUserLoggedIn();
+
+        if (isAccessTokenValid)
+        {
+            var userDetails = await Service.GetAsync<ProfileRequestDto>("UserProfile/GetUserDetails");
+
+            var user = userDetails!;
+
+            _globalState = new GlobalState()
+            {
+                Name = user.FullName,
+                ImageUrl = user.ImageURL,
+                RoleName = user.RoleName,
+                UserId = user.UserId,
+                RoleId = user.RoleId
+            };
+
+            var notifications = await Service.GetAsync<int>("Notification/GetUnreadNotificationsCount");
+
+            notificationCount = notifications;
+        }
+    }
+
+    private async Task LogoutHandler()
+    {
+        _globalState = new GlobalState();
+
+        await Service.LogOutUser();
+
+        NavManager.NavigateTo("/feeds", forceLoad: true);
+    }
+}

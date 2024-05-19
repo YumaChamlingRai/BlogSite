@@ -1,0 +1,215 @@
+﻿@page "/feeds"
+
+@using Bislerium.Models.Response
+@using Bislerium.Services
+
+@inject APIService ApiService
+@inject NavigationManager NavManager
+
+<PageTitle>Social Feeds</PageTitle>
+
+<div class="row">
+    <div class="col-2">
+        <div class="sidebar">
+            <h4 class="sidebar-heading">What Do You Want </h4>
+            <div class="radio-group mt-5">
+                <div class="radio-item">
+                    <input type="radio" id="all-time" name="period" value="Popularity" @onchange="HandleFeedCategory" checked>
+                    <label class="radio-label" for="all-time">
+                        <i class="mdi mdi-trending-up"></i> Popular
+                    </label>
+                </div>
+                <div class="radio-item mt-5">
+                    <input type="radio" id="monthly" name="period" value="Recency" @onchange="HandleFeedCategory">
+                    <label class="radio-label" for="monthly">
+                        <i class="mdi mdi-clock"></i> Recently Uploaded
+                    </label>
+                </div>
+                <div class="radio-item mt-5">
+                    <input type="radio" id="random" name="period" value="Random" @onchange="HandleFeedCategory">
+                    <label class="radio-label" for="random">
+                        <i class="mdi mdi-shuffle"></i> Random Order
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-10">
+        <div class="social-feed">
+            @foreach (var item in Blogs)
+            {
+                <div class="card shadow">
+                    <div class="card-body pb-1">
+                        <div class="d-flex">
+                            <img class="me-2 rounded" src="https://localhost:44340/@item.BloggerImage" alt="Generic placeholder image" height="42">
+                            <div class="w-100">
+                                <h5 class="m-0">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div>
+                                            <h5 class="m-0">@item.BloggerName</h5>
+                                            <p class="text-muted mb-1"><small>@item.Location - @item.UploadedTimePeriod</small></p>
+                                            <p class="mb-0">
+                                                <span class="fw-bold">Feeling:</span> @item.Reaction
+                                                @if (item.IsEdited)
+                                                {
+                                                    <span class="text-muted">(Updated)</span>
+                                                }
+                                            </p>
+                                        </div>
+                                    </div>
+                                </h5>
+
+                                <p class="text-muted"><small><span class="mx-1">⚬</span> <span>@item.PopularityPoints Points</span></small></p>
+
+                            </div>
+                        </div>
+                        <hr class="m-0">
+                        <div class="text-center text-white fw-normal fs-3 my-3 p-3 rounded shadow-lg" style="background-color: #1F2B37;">
+                            <i class="mdi "></i>
+                            @item.Title
+                        </div>
+
+                        <div class="my-3">
+                            <p class="fs-4">@item.Body</p>
+                            @if (item.Images.Count > 0)
+                            {
+                                <div class="row card-images">
+                                    @switch (item.Images.Count)
+                                    {
+                                        case 1:
+                                            <div class="col-12">
+                                                <img src="https://localhost:44340/@item.Images[0]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            break;
+
+                                        case 2:
+                                            <div class="col-sm-6">
+                                                <img src="https://localhost:44340/@item.Images[0]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img src="https://localhost:44340/@item.Images[1]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            break;
+
+                                        case 3:
+                                            <div class="col-sm-7">
+                                                <img src="https://localhost:44340/@item.Images[0]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            <div class="col-sm-5">
+                                                <img src="https://localhost:44340/@item.Images[1]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                                <img src="https://localhost:44340/@item.Images[2]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            break;
+
+                                        case 4:
+                                            <div class="col-sm-6">
+                                                <img src="https://localhost:44340/@item.Images[0]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img src="https://localhost:44340/@item.Images[1]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img src="https://localhost:44340/@item.Images[2]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img src="https://localhost:44340/@item.Images[3]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            break;
+
+                                        case 5:
+                                            <div class="col-sm-4">
+                                                <img src="https://localhost:44340/@item.Images[0]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <img src="https://localhost:44340/@item.Images[1]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            <div class="col-sm-4">
+                                                <img src="https://localhost:44340/@item.Images[2]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img src="https://localhost:44340/@item.Images[3]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <img src="https://localhost:44340/@item.Images[4]" alt="post-img" class="rounded shadow img-fluid w-100">
+                                            </div>
+                                            break;
+                                    }
+                                </div>
+                            }
+                        </div>
+                        <hr class="m-0">
+                        <div class="my-1">
+                            @if (item.IsUpVotedByUser)
+                            {
+                                <i class="mdi mdi-arrow-up-bold text-success"></i>
+                            }
+                            else
+                            {
+                                <i class="mdi mdi-arrow-up-bold-outline text-muted"></i>
+                            }
+                            @item.UpVotes
+                            @if (item.IsDownVotedByUser)
+                            {
+                                <i class="mdi mdi-arrow-down-bold text-danger"></i>
+                            }
+                            else
+                            {
+                                <i class="mdi mdi-arrow-down-bold-outline text-muted"></i>
+                            }
+                            @item.DownVotes
+                            <a class="btn btn-sm btn-link text-muted">
+                                <i class="uil uil-comments-alt"></i> @item.CommentCount Comments
+                            </a>
+                            <a @onclick="() => NavigateToBlogDetails(item.BlogId)" class="btn btn-sm btn-link text-muted">
+                                <i class="uil uil-share-alt"></i> Details
+                            </a>
+                        </div>
+                        <hr class="m-0">
+                        <div class="mt-3">
+                            <div class="d-flex">
+                                @if (item.Comments != null)
+                                {
+                                    foreach (var comment in item.Comments)
+                                    {
+                                        var image = $"https://localhost:44340/{comment.ImageUrl}";
+                                        <img class="me-2 rounded" src="@image" alt="Generic placeholder image" height="32">
+                                        <div>
+                                            <h5 class="m-0">@comment.CommentedBy</h5>
+                                            <p class="text-muted mb-0"><small>@comment.CommentedTimePeriod</small></p>
+                                            <p class="my-1">@comment.Comment</p>
+                                            <div>
+                                                @if (comment.IsUpVotedByUser)
+                                                {
+                                                    <i class="mdi mdi-arrow-up-bold text-success"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="mdi mdi-arrow-up-bold-outline text-muted"></i>
+                                                }
+                                                @comment.UpVotes
+                                                @if (comment.IsDownVotedByUser)
+                                                {
+                                                    <i class="mdi mdi-arrow-down-bold text-danger"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="mdi mdi-arrow-down-bold-outline text-muted"></i>
+                                                }
+                                                @comment.DownVotes
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="text-center mb-3">
+                <a href="javascript:void(0);" class="text-warning"><i class="mdi mdi-spin mdi-loading me-1 font-16"></i> Load more </a>
+            </div>
+        </div>
+    </div>
+</div>

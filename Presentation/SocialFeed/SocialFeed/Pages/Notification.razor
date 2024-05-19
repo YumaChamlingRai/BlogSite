@@ -1,0 +1,114 @@
+﻿@page "/notifications"
+@using Bislerium.DTOs
+@using Bislerium.Services
+@inject APIService BaseService
+
+<PageTitle>Notifications</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Notifications</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            @if (NotificationDetails != null && NotificationDetails.Any())
+            {
+                foreach (var item in NotificationDetails)
+                {
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="notification-wrapper" data-simplebar>
+                                <h5 class="text-muted font-weight-normal mt-2">@item.TimePeriod</h5>
+                                @foreach (var notification in item.Notifications)
+                                {
+                                    if (notification.IsSeen)
+                                    {
+                                        <a class="dropdown-item notify-item card shadow-none mb-2 @(notification.IsSeen ? "" : "unread-noti")" style="cursor: pointer;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="col-11">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                                            <div class="notify-icon mt-2 pt-1 ms-2">
+                                                                @{
+                                                                    var image = $"https://localhost:44391/user-images/{notification.SentImageUrl}";
+                                                                }
+                                                                <img src="@image" width="45" height="45" class="rounded-circle" alt="" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div class="text-truncate">
+                                                                <h6 class="mb-1 font-weight-semibold">@notification.SentByUser</h6>
+                                                                <p class="mb-0 font-size-sm text-muted">@notification.Title</p>
+                                                                <p class="mb-2 font-size-sm text-muted">@notification.Content</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-1">
+                                                    <div class="ms-5">
+                                                        <i class="mdi mdi-close text-muted" style="cursor: pointer;"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <a class="dropdown-item notify-item card shadow-none mb-2 @(notification.IsSeen ? "" : "unread-noti")" style="cursor: pointer; background-color: #f5f5f5;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="col-11">
+                                                    <div class="row">
+                                                        <div class="col-auto">
+                                                            <div class="notify-icon mt-2 pt-1 ms-2">
+                                                                @{
+                                                                    var image = $"https://localhost:44391/user-images/{notification.SentImageUrl}";
+                                                                }
+                                                                <img src="@image" width="45" height="45" class="rounded-circle" alt="" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-auto">
+                                                            <div class="text-truncate">
+                                                                <h6 class="mb-1 font-weight-semibold">@notification.SentByUser</h6>
+                                                                <p class="mb-0 font-size-sm text-muted">@notification.Title</p>
+                                                                <p class="mb-2 font-size-sm text-muted">@notification.Content</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-1">
+                                                    <div class="ms-5">
+                                                        <i class="mdi mdi-close text-muted" style="cursor: pointer;"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center p-4">
+                    <h6 class="m-0 font-weight-semibold">No available notifications.</h6>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@code {
+    private List<NotificationResponseDto> NotificationDetails = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var notifications = await BaseService.GetAsync<List<NotificationResponseDto>>("Notification/GetNotifications");
+
+        NotificationDetails = notifications!;
+    }
+}

@@ -1,0 +1,11 @@
+:root {
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+.content{
+    padding: 0 !important;
+}
+
+.form-check .form-check-input {
+  float: left;
+}

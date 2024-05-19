@@ -1,0 +1,155 @@
+﻿@page "/dashboard"
+@using Bislerium.DTOs
+@using Bislerium.Services
+@using ChartJs.Blazor.BarChart
+@using ChartJs.Blazor.LineChart
+
+@inject APIService APIService
+
+<div class="filter-card">
+    <div class="filter-group">
+        <label for="period">Period</label>
+        <div class="radio-group">
+            <input type="radio" id="all-time" name="period" value="AllTime" @onchange="HandlePeriodType">
+            <label class="p-0" for="all-time">All Time</label>
+            <input type="radio" id="monthly" name="period" value="Monthly" @onchange="HandlePeriodType">
+            <label for="monthly">Monthly</label>
+        </div>
+    </div>
+    @if (ShowMonth)
+    {
+        <div class="filter-group">
+            <label for="month">Month</label>
+            <select class="form-control" @onchange="OnMonthSelection">
+                <option value="January">January</option>
+                <option value="February">February</option>
+                <option value="March">March</option>
+                <option value="April">April</option>
+                <option value="May">May</option>
+                <option value="June">June</option>
+                <option value="July">July</option>
+                <option value="August">August</option>
+                <option value="September">September</option>
+                <option value="October">October</option>
+                <option value="November">November</option>
+                <option value="December">December</option>
+            </select>
+        </div>
+    }
+    <button type="button" class="search-button" @onclick="DashboardAnalysis">Search</button>
+</div>
+
+@if (IsRendered)
+{
+    if (ReactionCount != null)
+    {
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Count</th>
+            </tr>
+            @foreach (var item in ReactionCount)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Count</td>
+                </tr>
+            }
+        </table>
+    }
+
+    if (PopularBloggersCount != null)
+    {
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Count</th>
+            </tr>
+            @foreach (var item in PopularBloggersCount)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Count</td>
+                </tr>
+            }
+        </table>
+    }
+
+    if (PopularBlogsCount != null)
+    {
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Count</th>
+            </tr>
+            @foreach (var item in PopularBlogsCount)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Count</td>
+                </tr>
+            }
+        </table>
+    }
+}
+
+@code {
+    private string Period { get; set; }
+
+    private string Month { get; set; }
+
+    private bool ShowMonth { get; set; }
+
+    private bool IsRendered { get; set; }
+
+    private void HandlePeriodType(ChangeEventArgs e)
+    {
+        var reaction = e.Value?.ToString();
+
+        if (reaction != null)
+        {
+            Period = reaction;
+
+            Month = "";
+
+            if(Period == "Monthly")
+            {
+                ShowMonth = true;
+            }
+            else
+            {
+                Period = null;
+
+                ShowMonth = false;
+            }
+        }
+    }
+
+    private void OnMonthSelection(ChangeEventArgs e)
+    {
+        Period = e.Value?.ToString();
+    }
+
+    private async Task DashboardAnalysis()
+    {
+        IsRendered = false;
+
+        var result = await APIService.GetAsync<DashboardResponseDto>($"Administrator/GetDashboardDetails?selectedMonth={Period}");
+
+        IsRendered = true;
+
+        DashboardDetails = result;
+
+        ReactionCount = result.ReactionCount;
+        PopularBloggersCount = result.PopularBloggersCount;
+        PopularBlogsCount = result.PopularBlogsCount;
+    }
+
+    private DashboardResponseDto DashboardDetails { get; set; }
+
+    List<DashboardCount> ReactionCount { get; set; } = new List<DashboardCount>();
+
+    List<DashboardCount> PopularBloggersCount { get; set; } = new List<DashboardCount>();
+
+    List<DashboardCount> PopularBlogsCount { get; set; } = new List<DashboardCount>();
+}

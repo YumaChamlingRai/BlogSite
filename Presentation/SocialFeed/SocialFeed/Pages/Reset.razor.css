@@ -1,0 +1,10 @@
+article.content {
+  padding: 0;
+}
+.authentication-bg {
+  height: 100vh;
+}
+.card-header a {
+    text-decoration: none;
+    color: inherit;
+}

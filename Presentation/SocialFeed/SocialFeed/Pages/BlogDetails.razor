@@ -1,0 +1,129 @@
+﻿@page "/blog-details/{blogId:int}"
+@using System.Text.Json
+@using Bislerium.DTOs
+@using Bislerium.Services
+
+
+@inject APIService APIService
+@inject NavigationManager NavManager
+
+<div class="container-fluid">
+    <div class="card col-lg-8 col-md-10 col-xl-7 mt-3 mx-auto">
+        <div class="card-body">
+            <div class="page-title-box">
+                <h4 class="page-title mt-0">Update Post</h4>
+            </div>
+            <div class="row card-images">
+                @if (_blogDetails.Images != null)
+                {
+                    switch (_blogDetails.Images.Count)
+                    {
+                    case 1:
+                    <div class="col-12">
+                        <img src="https://localhost:44340/@_blogDetails.Images[0]" alt="post-img" class="rounded img-fluid w-100">
+                    </div>
+                    break;
+                    }
+                }
+            </div>
+            <div class="mb-3 card-item">
+                <label for="projectname" class="form-label">Title</label>
+                <input type="text" id="projectname" class="form-control" @bind="_blogDetails.Title" placeholder="Enter post title">
+            </div>
+
+            <div class="mb-3 card-item">
+                <label for="project-overview" class="form-label">Overview</label>
+                <textarea class="form-control" id="project-overview" rows="5" @bind="_blogDetails.Body"
+                          placeholder="Enter some brief about post.."></textarea>
+            </div>
+
+            <div class="mb-3 card-item">
+                <label for="reaction" class="form-label">Reaction</label>
+                <div class="">
+                    <div class="form-check form-check-inline m-0 p-0">
+                        @if (_blogDetails.Reaction == "Happy")
+                        {
+                        <input type="radio" value="Happy" class="form-check-input " @onchange="HandleReactionType" checked="checked">
+                        }
+                        else
+                        {
+                        <input type="radio" value="Happy" class="form-check-input " @onchange="HandleReactionType">
+                        }
+                        <label class="form-check-label">Happy</label>
+                    </div>
+                    <div class="form-check form-check-inline me-4 p-0">
+                        @if (_blogDetails.Reaction == "Sad")
+                        {
+                        <input type="radio" value="Sad" class="form-check-input " @onchange="HandleReactionType" checked="checked">
+                        }
+                        else
+                        {
+                        <input type="radio" value="Sad" class="form-check-input " @onchange="HandleReactionType">
+                        }
+                        <label class="form-check-label">Sad</label>
+                    </div>
+                    <div class="form-check form-check-inline me-2 p-0">
+                        @if (_blogDetails.Reaction == "Excited")
+                        {
+                        <input type="radio" value="Excited" class="form-check-input " @onchange="HandleReactionType" checked="checked">
+                        }
+                        else
+                        {
+                        <input type="radio" value="Excited" class="form-check-input " @onchange="HandleReactionType">
+                        }
+                        <label class="form-check-label">Excited</label>
+                    </div>
+                    <div class="form-check form-check-inline me-4 p-0">
+                        @if (_blogDetails.Reaction == "Loved")
+                        {
+                        <input type="radio" value="Loved" class="form-check-input " @onchange="HandleReactionType" checked="checked">
+                        }
+                        else
+                        {
+                        <input type="radio" value="Loved" class="form-check-input " @onchange="HandleReactionType">
+                        }
+                        <label class="form-check-label">Loved</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3 card-item">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" id="location" class="form-control" placeholder="Enter loaction" @bind="_blogDetails.Location">
+            </div>
+
+            <div class="btn-wrapper text-start">
+                <button type="submit" class="btn btn-danger" @onclick="DeleteBlog">Delete Post</button>
+                <button type="submit" class="btn btn-gradient" @onclick="HandleValidSubmit">Update Post</button>
+            </div>
+        </div>
+        <div class="card">
+            @if (_blogLogsDetails != null && _blogLogsDetails.Count > 0)
+            {
+                <table class="table">
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Overview</th>
+                        <th>Location</th>
+                        <th>Reaction</th>
+                    </tr>
+                    @foreach (var item in _blogLogsDetails)
+                    {
+                    <tr>
+                        <td></td>
+                        <td>@item.Title</td>
+                        <td>@item.Body</td>
+                        <td>@item.Location</td>
+                        <td>@item.Reaction</td>
+                    </tr>
+                    }
+                </table>
+            }
+        </div>
+    </div>
+    @if (!string.IsNullOrEmpty(Message))
+    {
+        <MessageLayout Type="@Type" Message="@Message" />
+    }
+</div>

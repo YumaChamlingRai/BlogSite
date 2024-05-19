@@ -1,0 +1,295 @@
+﻿@using System.Text.Json
+@using Bislerium.Models.Request
+@using Bislerium.Models.Response
+@using Bislerium.Services
+@inject APIService APIService
+
+@if (Comment != null)
+{
+    foreach (var item in Comment)
+    {
+        <div class="d-flex">
+            <img class="me-2 rounded" src="@GetImageUrl(item.ImageUrl)" alt="Generic placeholder image" height="32">
+            <div>
+                <h5 class="m-0">@item.CommentedBy</h5>
+                <p class="text-muted mb-0"><small>@item.CommentedTimePeriod</small></p>
+                <p class="my-1">@item.Comment</p>
+                @if (item.IsUpdated)
+                {
+                    <p class="text-muted mb-0"><small>(Updated)</small></p>
+                }
+                <div>
+                    @if (item.IsUpVotedByUser)
+                    {
+                        <i class="mdi mdi-arrow-up-bold text-muted"></i>
+                    }
+                    else
+                    {
+                        if (IsLoggedIn)
+                        {
+                            <a @onclick="() => UpVoteDownVoteComment(1, item.CommentId)" class="btn btn-sm btn-link text-muted">
+                                <i class="mdi mdi-arrow-up-bold-outline text-muted"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-link text-muted">
+                                <i class="mdi mdi-arrow-up-bold-outline text-muted"></i>
+                            </a>
+                        }
+
+                    }
+                    @item.UpVotes
+                    @if (item.IsDownVotedByUser)
+                    {
+                        <i class="mdi mdi-arrow-down-bold text-muted"></i>
+                    }
+                    else
+                    {
+                        if (IsLoggedIn)
+                        {
+                            <a @onclick="() => UpVoteDownVoteComment(2, item.CommentId)" class="btn btn-sm btn-link text-muted">
+                                <i class="mdi mdi-arrow-down-bold-outline text-muted"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-sm btn-link text-muted">
+                                <i class="mdi mdi-arrow-down-bold-outline text-muted"></i>
+                            </a>
+                        }
+                    }
+                    @item.DownVotes
+                </div>
+                <div class="row">
+                    <div class="col">
+                        @if (IsLoggedIn)
+                        {
+                            <a @onclick="() => OpenCommentModalForComment(item.CommentId)" class="btn btn-sm btn-link text-muted">
+                                <i class="uil uil-comments-alt"></i> Reply
+                            </a>
+                        }
+                    </div>
+                    @if (item.IsDeletable)
+                    {
+                        <div class="col">
+                            <a @onclick="() => DeleteComment(item.CommentId)" class="btn btn-sm btn-link text-muted">
+                                <i class="mdi mdi-delete-clock"></i> Delete
+                            </a>
+                        </div>
+
+                    }
+                </div>
+            </div>
+        </div>
+
+        @if (IsCommentModalOpenForComment && item.CommentId == CommentId)
+        {
+            <form @onsubmit="CommentForComment" class="comment-form mt-2 mb-2">
+                <p class="note my-3">You are uploading a comment on @item.CommentedBy's comment.</p>
+                <div class="mb-3">
+                    <label class="form-label">&nbsp;Comment Description</label>
+                    <textarea type="text" class="form-control" @bind="_reaction.Comment" placeholder="Enter your comment and description"></textarea>
+                </div>
+                <div class="btn-wrapper text-end mb-2">
+                    <button type="submit" class="btn btn-success">Upload Comment</button>
+                </div>
+            </form>
+        }
+
+        @if (item.Comments != null)
+        {
+            <div class="d-flex ms-4 mt-3">
+                <CommentLayout Comment="@item.Comments" />
+            </div>
+        }
+    }
+}
+
+<style>
+    .comment-form {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+        .comment-form .form-label {
+            font-weight: bold;
+        }
+
+        .comment-form .form-control {
+            resize: none;
+        }
+
+        .comment-form .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+            .comment-form .btn-success:hover {
+                background-color: #218838;
+                border-color: #1e7e34;
+            }
+
+</style>
+
+@if (!string.IsNullOrEmpty(Message))
+{
+    <MessageLayout Type="@Type" Message="@Message" />
+}
+
+@code {
+    [Parameter]
+    public int? BlogId { get; set; }
+
+    [Parameter]
+    public List<PostComments>? Comment { get; set; }
+
+    private bool IsLoggedIn { get; set; }
+
+    // private HubConnection hubConnection;
+
+    private readonly ReactionRequestDto _reaction = new();
+
+    private int CommentId = 0;
+    private string Type = "";
+    private string Message = "";
+    private bool IsCommentModalOpenForComment = false;
+
+    private string GetImageUrl(string imageUrl)
+    {
+        return $"https://localhost:44340/{imageUrl}";
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoggedIn = await APIService.IsUserLoggedIn();
+
+        if (BlogId is 0 or null) return;
+
+        var blogDetails = await APIService.GetAsync<FeedResponseDto>($"Reaction/GetBlogDetails?blogId={BlogId}");
+
+        Comment = blogDetails!.Comments;
+
+        // hubConnection = new HubConnectionBuilder()
+        //     .WithUrl("https://localhost:44391/notificationHub")
+        //     .Build();
+
+        // await hubConnection.StartAsync();
+    }
+
+    // private bool IsConnected => hubConnection.State == HubConnectionState.Connected;
+
+    // public void Dispose()
+    // {
+    //     _ = hubConnection.DisposeAsync();
+    // }
+
+    // private async Task SendMessage()
+    // {
+    //     await hubConnection.SendAsync("ReceiveNotification");
+    // }
+
+    private async Task UpVoteDownVoteComment(int reactionId, int commentId)
+    {
+        try
+        {
+            var reactionModel = new ReactionRequestDto()
+            {
+                CommentId = commentId,
+                ReactionId = reactionId
+            };
+
+            var jsonRequest = JsonSerializer.Serialize(reactionModel);
+
+            var content = new StringContent(jsonRequest, System.Text.Encoding.UTF8, "application/json");
+
+            await APIService.PostAsync("Reaction/UpVoteDownVoteComment", content);
+
+            await OnInitializedAsync();
+
+            Type = "success";
+
+            Message = reactionId == 1 ? "Comment successfully up voted" : "Comment successfully down voted";
+
+            // if (IsConnected)
+            // {
+            //     await SendMessage();
+            // }
+        }
+        catch (Exception e)
+        {
+            Type = "danger";
+            Message = "An exception occured while reacting the comment, try again";
+            Console.WriteLine(e);
+        }
+    }
+
+    private void OpenCommentModalForComment(int commentId)
+    {
+        CommentId = commentId;
+        _reaction.CommentId = commentId;
+        IsCommentModalOpenForComment = true;
+    }
+
+    private async Task CommentForComment()
+    {
+        try
+        {
+            var reactionModel = new ReactionRequestDto()
+            {
+                CommentId = _reaction.CommentId,
+                Comment = _reaction.Comment
+            };
+
+            var jsonRequest = JsonSerializer.Serialize(reactionModel);
+
+            var content = new StringContent(jsonRequest, System.Text.Encoding.UTF8, "application/json");
+
+            await APIService.PostAsync("Reaction/CommentForComment", content);
+
+            await OnInitializedAsync();
+
+            _reaction.Comment = "";
+
+            Type = "success";
+            
+            IsCommentModalOpenForComment = false;
+            Message = "Comment successfully uploaded";
+
+            // if (IsConnected)
+            // {
+            //     await SendMessage();
+            // }
+        }
+        catch (Exception e)
+        {
+            Type = "danger";
+            Message = "An exception occured while uploading your comment, try again";
+            Console.WriteLine(e);
+        }
+    }
+
+    private async Task DeleteComment(int commentId)
+    {
+        await APIService.DeleteAsync($"Reaction/DeleteComment?commentId={commentId}");
+
+        await OnInitializedAsync();
+
+        _reaction.Comment = "";
+
+        Type = "success";
+        IsCommentModalOpenForComment = false;
+        Message = "Comment successfully deleted";
+    }
+
+    // private async Task RenderComments(int commentId)
+    // {
+    //     if (BlogId == 0) return;
+
+    //     var blogDetails = await BaseService.GetAsync<Derived<FeedResponseDto>>($"home/blogs-details/{BlogId}");
+
+    //     Comment = blogDetails!.Result!.Comments!.FirstOrDefault(x => x.CommentId == commentId)!;
+    // }
+}

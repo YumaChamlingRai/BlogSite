@@ -1,0 +1,20 @@
+body {
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+.content{
+  padding: 0 !important;
+}
+.authentication-bg {
+  height: 100vh;
+}
+.input-group .form-control {
+  border-radius: 0.5rem 0 0 0.5rem !important;
+}
+.input-group .input-group-text {
+  border-radius: 0 0.5rem 0.5rem 0 !important;
+}
+.form-check .form-check-input {
+  float: left;
+}
+

@@ -1,0 +1,77 @@
+﻿@page "/register"
+
+@using System.Text.Json
+@using System.Net.Http.Headers
+@using Bislerium.Models.Request
+@using Bislerium.Services
+
+@inject HttpClient HttpClient
+@inject APIService ApiService
+@inject NavigationManager NavigationManager
+
+<PageTitle>User Registration</PageTitle>
+
+<section class="vh-100 mt-0 mb-0">
+    <div class="container h-100 mt-0">
+        <div class="row d-flex justify-content-center align-items-center h-100 mt-0">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black shadow" style="border-radius: 25px;">
+                    <div class="card-body p-md-5 mt-0">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+                                <form class="mx-1 mx-md-4 mb-0" @onsubmit="@HandleValidSubmit">
+                                    <a class="text-warning">
+                                        <span style="font-size: 30px;">R</span>EGISTER AS 
+                                        <span style="font-size: 30px;">B</span>LOGGER
+                                    </a>
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="fullname" class="form-label">Full Name</label>
+                                            <input class="form-control" type="text" @bind="@_registrationRequestDto.FullName" id="fullname" placeholder="Enter your name" required="">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="userName" class="form-label">Username</label>
+                                            <input class="form-control" type="text" @bind="@_registrationRequestDto.Username" id="userName" placeholder="Enter username" required="">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="emailaddress" class="form-label">Email address</label>
+                                        <input class="form-control" type="email" @bind="@_registrationRequestDto.EmailAddress" id="emailaddress" required="" placeholder="Enter your email">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input type="password" id="password" @bind="@_registrationRequestDto.Password" class="form-control" placeholder="Enter your password">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="phoneNumber" class="form-label">Phone number</label>
+                                        <input type="tel" id="phoneNumber" @bind="@_registrationRequestDto.MobileNumber" class="form-control" placeholder="Enter your Phone Number">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="fileUpload" class="form-label">Upload Image</label>
+                                        <InputFile class="form-control" placeholder="Upload your image" OnChange="@OnInputFileChanged" />
+                                    </div>
+                                    <div class="form-check d-flex justify-content-center mb-5">
+                                        <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                                        <label class="form-check-label" for="form2Example3">
+                                            I agree all statements in <a href="#!">Terms of service</a>
+                                        </label>
+                                    </div>
+                                    <div class="text-center mt-1 mx-4 mb-3 mb-lg-4">
+                                        <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-lg">Register</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2 mt-0">
+                                <img src="images/blogimg/userblog" class="img-fluid" alt="admin blog registration">
+                            </div>
+                            @if (!string.IsNullOrEmpty(Message))
+                            {
+                                <MessageLayout Type="@Type" Message="@Message" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

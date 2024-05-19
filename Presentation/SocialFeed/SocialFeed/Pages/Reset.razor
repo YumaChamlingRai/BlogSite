@@ -1,0 +1,43 @@
+﻿@page "/reset-password"
+@using Bislerium.Services
+
+@inject APIService APIService
+@inject NavigationManager NavManager
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+
+<PageTitle>Reset Password</PageTitle>
+
+<div class="authentication-bg d-flex justify-content-center " style="margin-top: 100px; height: 350px">
+    <div class="card text-center rounded shadow" style="width: 700px;">
+        <div class="card-header h5 text-black bg-light">
+            <a class="text-black" href="" style="font-size: 21px;font-weight: bold;">
+                <span style="font-size: 30px;">P</span>ASSWORD
+                <span style="font-size: 30px;">R</span>ESET
+            </a>
+        </div>
+        <div class="card-body px-5">
+            <form @onsubmit="@HandleValidSubmit">
+                <p class="card-text py-2">
+                    Enter your email address and we'll send you an email with instructions to reset your password.
+                    <i class="bi bi-lock"></i>
+                </p>
+                <div data-mdb-input-init class="form-outline">
+                    <input type="email" id="typeEmail" class="form-control my-3" @bind="EmailAddress"/>
+                </div>
+                <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning w-100">Reset Password</button>
+            </form>
+            <div class="row">
+                @if (!string.IsNullOrEmpty(Message))
+                {
+                    <MessageLayout Type="@Type" Message="@Message" />
+                }
+            </div>
+            <footer class="footer footer-alt">
+                <div class="col-12 text-center">
+                    <p class="text-muted">Back to <a href="login" class="text-muted ms-1"><b>Log In</b></a></p>
+                </div>
+            </footer>
+        </div>
+    </div>
+</div>
