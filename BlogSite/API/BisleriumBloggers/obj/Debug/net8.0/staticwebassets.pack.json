@@ -1,0 +1,73 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\61f7e1e3988bb3d5416c3883_61ee8c3ac2047c34c1696949_apr16-01-184777571.jpeg",
+      "PackagePath": "staticwebassets\\61f7e1e3988bb3d5416c3883_61ee8c3ac2047c34c1696949_apr16-01-184777571.jpeg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\90426815_original.jpg",
+      "PackagePath": "staticwebassets\\90426815_original.jpg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\Beijing_2008,_Beijing_National_Stadium.jpg",
+      "PackagePath": "staticwebassets\\Beijing_2008,_Beijing_National_Stadium.jpg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\IDEEA.jpg",
+      "PackagePath": "staticwebassets\\IDEEA.jpg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\Promoting-a-running-event-thumb.jpg",
+      "PackagePath": "staticwebassets\\Promoting-a-running-event-thumb.jpg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\Wikimedia_Hackathon_2013,_Amsterdam_-_Flickr_-_Sebastiaan_ter_Burg_(28).jpg",
+      "PackagePath": "staticwebassets\\Wikimedia_Hackathon_2013,_Amsterdam_-_Flickr_-_Sebastiaan_ter_Burg_(28).jpg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\bigstock-Selective-Focus-To-Business-Wo-348891394-scaled.jpg",
+      "PackagePath": "staticwebassets\\bigstock-Selective-Focus-To-Business-Wo-348891394-scaled.jpg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\cost-marathon-featured-image-blog-10.png",
+      "PackagePath": "staticwebassets\\cost-marathon-featured-image-blog-10.png"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\dummy.svg",
+      "PackagePath": "staticwebassets\\dummy.svg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\fe-30.jpg",
+      "PackagePath": "staticwebassets\\fe-30.jpg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\hack-ny-hackathon.jpg",
+      "PackagePath": "staticwebassets\\hack-ny-hackathon.jpg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\marathon-berlin-pixabay.jpg",
+      "PackagePath": "staticwebassets\\marathon-berlin-pixabay.jpg"
+    },
+    {
+      "Id": "C:\\ApplicationDev\\Bislerium - Coursework\\API\\BisleriumBloggers\\wwwroot\\sportevent_1-scaled.jpg",
+      "PackagePath": "staticwebassets\\sportevent_1-scaled.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.BisleriumBloggers.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.BisleriumBloggers.props",
+      "PackagePath": "build\\BisleriumBloggers.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.BisleriumBloggers.props",
+      "PackagePath": "buildMultiTargeting\\BisleriumBloggers.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.BisleriumBloggers.props",
+      "PackagePath": "buildTransitive\\BisleriumBloggers.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
